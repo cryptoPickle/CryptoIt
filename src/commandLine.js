@@ -1,12 +1,18 @@
 import yargs from 'yargs';
-
+import colors from 'colors';
 function commandLine() {
   yargs
     .usage('Usage: $0 <command> [options]')
-    .command('encrypt', 'encrypt the file')
-    .command('decrypt', 'decrypt the file')
-    .command('encrypt-multi', 'encrypt multiple file in same format and key')
-    .command('decrypt-multi', 'decrypt multiple file in same format and key')
+    .command('encrypt'.blue, 'encrypt the file'.magenta)
+    .command('decrypt'.blue, 'decrypt the file'.magenta)
+    .command(
+      'encrypt-multi'.blue,
+      'encrypt multiple file in same format and key'.magenta
+    )
+    .command(
+      'decrypt-multi'.blue,
+      'decrypt multiple file in same format and key'.magenta
+    )
     .alias('f', 'file')
     .describe('f', 'Load a file')
     .alias('k', 'key')
@@ -17,12 +23,14 @@ function commandLine() {
     .describe('lsc', 'show chipper list')
     .demandOption(['f', 'k', 'c'])
     .example(
-      '$0 encrypt  -f foo.txt -k key -c aes',
-      'encrypt files with given key'
+      'cryptoIt encrypt  -f foo.txt -k [your key] -c aes || ==> encrypt files with given key'
+        .green
     )
     .help('h')
     .alias('h', 'help').argv;
   return yargs;
 }
+
+commandLine();
 
 export default commandLine;
