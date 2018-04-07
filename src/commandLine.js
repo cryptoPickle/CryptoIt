@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-function commandLine(){
+function commandLine() {
   yargs
     .usage('Usage: $0 <command> [options]')
     .command('encrypt', 'encrypt the file')
@@ -15,7 +15,7 @@ function commandLine(){
     .describe('c', 'provide the chipper')
     .alias('lsc', 'ls-chipper')
     .describe('lsc', 'show chipper list')
-    .demandOption(['f','k','c'])
+    .demandOption(['f', 'k', 'c'])
     .example(
       '$0 encrypt  -f foo.txt -k key -c aes',
       'encrypt files with given key'
@@ -24,6 +24,5 @@ function commandLine(){
     .alias('h', 'help').argv;
   return yargs;
 }
-
 
 export default commandLine;
