@@ -33,6 +33,8 @@ const IOlib = {
     let readFile = await this.readFileAsync(resolvedFilePath, type);
     if (!regex.test(readFile)) {
       await this.appendFileAsync(resolvedFilePath, `\n {-{-{${fileName}}-}-}`);
+    } else {
+      return false;
     }
   }
 };

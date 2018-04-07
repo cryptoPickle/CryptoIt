@@ -42,10 +42,14 @@ describe('File System', () => {
   });
 
   test('Do not write file name in document if exist', async () => {
-    const regex = /{{{(.*?)}}}/;
-    await IO.writeFileNameInDocument('./testFiles/test', 'utf8');
+    const regex = /{-{-{(.*?)}-}-}/;
+    let checkFile = await IO.writeFileNameInDocument(
+      './testFiles/test',
+      'utf8'
+    );
     const item = await IO.readFileAsync('./testFiles/test', 'utf8');
-    expect(regex.test(item)).toBe(false);
+    expect(checkFile).toBe(false);
+    expect(regex.test(item)).toBe(true);
     await IO.deleteFileAsync('./testFiles/test');
   });
 });
