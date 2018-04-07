@@ -1,17 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import uuid from 'uuid/v1';
+import { promisify } from 'util';
 
 const IOlib = {
-  writeFile(path, data) {
-    return fs.writeFile(path, data, (error) => error);
-  },
-  readFile(data, type) {
-    return fs.readFileSync(path.resolve(data), type);
-  },
-  deleteFile(data) {
-    return fs.unlink(path.resolve(data));
-  },
+  writeFileAsync: promisify(fs.writeFile),
+  readFileAsync: promisify(fs.readFileSync),
+  deleteFile: promisify(fs.unlink),
   fileName(file) {
     return path.basename(path.resolve(file));
   },

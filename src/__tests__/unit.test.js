@@ -3,22 +3,31 @@ import fs from 'fs';
 
 describe('Crypto Tests', () => {
   test('Read text format', () => {
-    expect(IO.readFile('.babelrc', 'utf8').length > 0).toBe(true);
+    IO.readFileAsync('.babelrc', 'utf8').then((item) => {
+      expect(item.lenght > 0).toBe(true);
+    });
   });
   test('Read an img file in hex', () => {
     let re = /[0-9A-Fa-f]{6}/g;
-    expect(re.test(IO.readFile('./testFiles/test.png', 'hex'))).toBe(true);
+    IO.readFileAsync('./testFiles/test.png', 'hex').then((item) =>
+      expect(re.test(item)).toBe(true)
+    );
   });
   test('Write file', () => {
-    IO.writeFile('./hello', 'Hello world');
-    setTimeout(() => expect(fs.existsSync('hello')).toBe(true), 2000);
+    IO.writeFileAsync('./hello', 'Hello world').then(() => {
+      IO.readFileAsync('./hello').then((item) => {
+        expect(item).toEqual('Hello world');
+      });
+      expect(fs.existsSync('.hello')).toBe(true);
+    });
   });
   test('Get file name', () => {
     expect(IO.fileName('hello')).toEqual('hello');
   });
   test('Delete the file', () => {
-    IO.deleteFile('hello');
-    setTimeout(() => expect(fs.existsSync('hello')).toBe(false), 2000);
+    IO.deleteFile('hello').then(() =>
+      expect(fs.existsSync('hello')).toBe(false)
+    );
   });
   test('Generate uuid', () => {
     expect(IO.generateUUID().length > 5).toBe(true);
