@@ -27,21 +27,13 @@ const IOlib = {
     return uuid();
   },
   async writeFileNameInDocument(filePath, type) {
-    let resolvedFilePath = path.resolve(filePath);
+    const regex = /{-{-{(.*?)}-}-}/;
+    const resolvedFilePath = path.resolve(filePath);
     const fileName = this.fileName(filePath);
-    let file = await this.readFileAsync(resolvedFilePath, type);
-    let newLinesOfFile = file.split('\n');
-    console.log(newLinesOfFile[newLinesOfFile.length - 1] !== fileName);
-    if (newLinesOfFile[newLinesOfFile.length - 1] !== fileName) {
-      console.log('hello');
-      await this.appendFileAsync(resolvedFilePath, `\n ${fileName}`);
+    let readFile = await this.readFileAsync(resolvedFilePath, type);
+    if (!regex.test(readFile)) {
+      await this.appendFileAsync(resolvedFilePath, `\n {-{-{${fileName}}-}-}`);
     }
-
-    //   let datainFile = this.readFile(path, type).split('\n');
-    //   let filename = this.fileName(path);
-    //   if (datainFile[datainFile.length - 1] !== filename) {
-    //     this.appendFile(path, `\n${filename}`);
-    //   }
   }
 };
 
