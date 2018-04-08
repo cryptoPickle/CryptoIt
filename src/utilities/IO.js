@@ -4,7 +4,7 @@ import uuid from 'uuid/v1';
 import { promisify } from 'util';
 import archiver from 'archiver';
 import unzip from 'unzip';
-import { ReplaySubject } from 'rx';
+
 
 const IOlib = {
   writeFileAsync(filePath, data) {

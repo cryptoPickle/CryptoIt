@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { sleep } from '../delay';
 
+
 describe('File System', () => {
   test('Read text format', async () => {
     let item = await IO.readFileAsync(
@@ -68,23 +69,23 @@ describe('File System', () => {
     ).toBe(true);
     await IO.deleteFileAsync(`./testFiles/${compressedFile}`);
   });
+
   test('Decompress the data', async () => {
+    let fileExist;
     let decompress = IO.decompressFiles(
       './testFiles',
       '9a640590-3b32-11e8-a2b2-a1d443475a3d.zip',
       './testFiles'
-    );
+    ).then(() => {
+      fileExist = IO.checkFileExistsAsync(
+        './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
+      );
+      expect(fileExist).toBe(true);
+    });
 
-    let fileExist = await IO.checkFileExistsAsync(
-      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
-    );
-
-    let test = expect(fileExist).toBe(true);
 
     await IO.deleteFileAsync(
       './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
     );
-
-    sleep(5000, decompress, test);
   });
 });
