@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import uuid from 'uuid/v1';
 import { promisify } from 'util';
+import archiver from 'archiver';
 
 const IOlib = {
   writeFileAsync(filePath, data) {
@@ -36,6 +37,37 @@ const IOlib = {
     } else {
       return false;
     }
+  },
+
+  async compressFiles(data, filePath) {
+    const fileName = this.generateUUID();
+    const output = fs.createWriteStream(
+      path.resolve(`${filePath}/${fileName}.zip`)
+    );
+    const archive = archiver('zip', {
+      zlib: { level: 1 }
+    });
+    //Listen archiving data
+    output.on('close', () => {
+      console.log(archive.pointer() + 'total bytes');
+    });
+    output.on('end', () => {
+      console.log('Data has been drained');
+    });
+
+    output.on('warning', (err) => {
+      if (err.code === 'ENOENT') console.log('No such a file!');
+      console.log(err);
+    });
+
+    archive.on('error', (err) => {
+      console.log(err);
+    });
+
+    archive.pipe(output);
+
+    archive.file(data, { name: fileName }).finalize();
+    return `${fileName}.zip`;
   }
 };
 

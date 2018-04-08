@@ -1,5 +1,6 @@
 import IO from '../IO';
 import fs from 'fs';
+import path from 'path';
 
 describe('File System', () => {
   test('Read text format', async () => {
@@ -51,5 +52,16 @@ describe('File System', () => {
     expect(checkFile).toBe(false);
     expect(regex.test(item)).toBe(true);
     await IO.deleteFileAsync('./testFiles/test');
+  });
+
+  test('Compress the data', async () => {
+    const compressedFile = await IO.compressFiles(
+      './testFiles/testFile',
+      './testFiles'
+    );
+    expect(
+      fs.existsSync(`${path.resolve('./testFiles')}/${compressedFile}`)
+    ).toBe(true);
+    await IO.deleteFileAsync(`./testFiles/${compressedFile}`);
   });
 });
