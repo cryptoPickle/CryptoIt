@@ -73,14 +73,6 @@ describe('File System', () => {
       './testFiles',
       '9a640590-3b32-11e8-a2b2-a1d443475a3d.zip',
       './testFiles'
-    );
-    const check = await IO.checkFileExistsAsync(
-      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
-    );
-    expect(check).toBe(true);
-
-    await IO.deleteFileAsync(
-      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
-    );
+    ).then((item) => expect(item).toEqual('unzipped'));
   });
 });

@@ -75,9 +75,13 @@ const IOlib = {
     return `${fileName}.zip`;
   },
   decompressFiles(filePath, zipFile, extractPlace) {
-    fs
-      .createReadStream(`${path.resolve(filePath)}/${zipFile}`)
-      .pipe(unzip.Extract({ path: `${path.resolve(extractPlace)}` }));
+    return new Promise((resolve, reject) => {
+      fs
+        .createReadStream(`${path.resolve(filePath)}/${zipFile}`)
+        .pipe(unzip.Extract({ path: `${path.resolve(extractPlace)}` }))
+        .on('finish', () => resolve('unzipped'))
+        .on('error', (err) => reject(err));
+    });
   }
 };
 
