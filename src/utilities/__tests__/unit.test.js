@@ -81,11 +81,9 @@ describe('File System', () => {
         './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
       );
       expect(fileExist).toBe(true);
+      IO.deleteFileAsync(
+        './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
+      );
     });
-
-
-    await IO.deleteFileAsync(
-      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
-    );
   });
 });
