@@ -5,7 +5,6 @@ import { promisify } from 'util';
 import archiver from 'archiver';
 import unzip from 'unzip';
 
-
 const IOlib = {
   writeFileAsync(filePath, data) {
     const asyncWrite = promisify(fs.writeFile);
@@ -76,11 +75,9 @@ const IOlib = {
     return `${fileName}.zip`;
   },
   decompressFiles(filePath, zipFile, extractPlace) {
-    return new Promise((resolve, reject) => {
-      fs
-        .createReadStream(`${path.resolve(filePath)}/${zipFile}`)
-        .pipe(unzip.Extract({ path: `${path.resolve(extractPlace)}` }));
-    });
+    fs
+      .createReadStream(`${path.resolve(filePath)}/${zipFile}`)
+      .pipe(unzip.Extract({ path: `${path.resolve(extractPlace)}` }));
   }
 };
 
