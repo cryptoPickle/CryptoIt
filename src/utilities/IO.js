@@ -3,6 +3,8 @@ import path from 'path';
 import uuid from 'uuid/v1';
 import { promisify } from 'util';
 import archiver from 'archiver';
+import unzip from 'unzip';
+import { ReplaySubject } from 'rx';
 
 const IOlib = {
   writeFileAsync(filePath, data) {
@@ -20,6 +22,10 @@ const IOlib = {
   appendFileAsync(filePath, data) {
     const appendFile = promisify(fs.appendFile);
     return appendFile(path.resolve(filePath), data);
+  },
+  checkFileExistsAsync(filePath) {
+    const checkFile = promisify(fs.exists);
+    return checkFile(path.resolve(filePath));
   },
   fileName(file) {
     return path.basename(path.resolve(file));
@@ -39,7 +45,7 @@ const IOlib = {
     }
   },
 
-  async compressFiles(data, filePath) {
+  compressFiles(data, filePath) {
     const fileName = this.generateUUID();
     const output = fs.createWriteStream(
       path.resolve(`${filePath}/${fileName}.zip`)
@@ -68,6 +74,13 @@ const IOlib = {
 
     archive.file(data, { name: fileName }).finalize();
     return `${fileName}.zip`;
+  },
+  decompressFiles(filePath, zipFile, extractPlace) {
+    return new Promise((resolve, reject) => {
+      fs
+        .createReadStream(`${path.resolve(filePath)}/${zipFile}`)
+        .pipe(unzip.Extract({ path: `${path.resolve(extractPlace)}` }));
+    });
   }
 };
 

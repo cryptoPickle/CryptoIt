@@ -1,10 +1,14 @@
 import IO from '../IO';
 import fs from 'fs';
 import path from 'path';
+import { sleep } from '../delay';
 
 describe('File System', () => {
   test('Read text format', async () => {
-    let item = await IO.readFileAsync('./testFiles/testFile', 'utf8');
+    let item = await IO.readFileAsync(
+      './testFiles/anotherBoringTestFile',
+      'utf8'
+    );
     expect(item.split(' ').length > 0).toBe(true);
   });
 
@@ -63,5 +67,24 @@ describe('File System', () => {
       fs.existsSync(`${path.resolve('./testFiles')}/${compressedFile}`)
     ).toBe(true);
     await IO.deleteFileAsync(`./testFiles/${compressedFile}`);
+  });
+  test('Decompress the data', async () => {
+    let decompress = IO.decompressFiles(
+      './testFiles',
+      '9a640590-3b32-11e8-a2b2-a1d443475a3d.zip',
+      './testFiles'
+    );
+
+    let fileExist = await IO.checkFileExistsAsync(
+      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
+    );
+
+    let test = expect(fileExist).toBe(true);
+
+    await IO.deleteFileAsync(
+      './testFiles/9a640590-3b32-11e8-a2b2-a1d443475a3d'
+    );
+
+    sleep(5000, decompress, test);
   });
 });
