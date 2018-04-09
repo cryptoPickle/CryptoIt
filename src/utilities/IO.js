@@ -46,9 +46,7 @@ const IOlib = {
 
   compressFiles(data, filePath) {
     const fileName = this.generateUUID();
-    const output = fs.createWriteStream(
-      path.resolve(`${filePath}/${fileName}.zip`)
-    );
+    const output = fs.createWriteStream(path.resolve(`${filePath}/${fileName}.zip`));
     const archive = archiver('zip', {
       zlib: { level: 1 }
     });
@@ -82,6 +80,16 @@ const IOlib = {
         .on('finish', () => resolve('unzipped'))
         .on('error', (err) => reject(err));
     });
+  },
+  async convertToOriginalFile(filePath, output, outputFileName, type) {
+    try {
+      const data = await this.readFileAsync(path.resolve(filePath), 'utf8');
+      const buffer = Buffer.from(data, type);
+      await this.writeFileAsync(`${path.resolve(output)}/${outputFileName}`, buffer);
+      return 'Data has been written!';
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 

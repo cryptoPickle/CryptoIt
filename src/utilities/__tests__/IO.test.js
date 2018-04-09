@@ -5,10 +5,7 @@ import { sleep } from '../delay';
 
 describe('File System', () => {
   test('Read text format', async () => {
-    let item = await IO.readFileAsync(
-      './testFiles/anotherBoringTestFile',
-      'utf8'
-    );
+    let item = await IO.readFileAsync('./testFiles/anotherBoringTestFile', 'utf8');
     expect(item.split(' ').length > 0).toBe(true);
   });
 
@@ -48,10 +45,7 @@ describe('File System', () => {
 
   test('Do not write file name in document if exist', async () => {
     const regex = /{-{-{(.*?)}-}-}/;
-    let checkFile = await IO.writeFileNameInDocument(
-      './testFiles/test',
-      'utf8'
-    );
+    let checkFile = await IO.writeFileNameInDocument('./testFiles/test', 'utf8');
     const item = await IO.readFileAsync('./testFiles/test', 'utf8');
     expect(checkFile).toBe(false);
     expect(regex.test(item)).toBe(true);
@@ -59,20 +53,26 @@ describe('File System', () => {
   });
 
   test('Compress the data', async () => {
-    const compressedFile = await IO.compressFiles(
-      './testFiles/testFile',
-      './testFiles'
-    );
-    expect(
-      fs.existsSync(`${path.resolve('./testFiles')}/${compressedFile}`)
-    ).toBe(true);
+    const compressedFile = await IO.compressFiles('./testFiles/testFile', './testFiles');
+    expect(fs.existsSync(`${path.resolve('./testFiles')}/${compressedFile}`)).toBe(true);
     await IO.deleteFileAsync(`./testFiles/${compressedFile}`);
   });
   test('Decompress the data', async () => {
-    IO.decompressFiles(
+    let status = await IO.decompressFiles(
       './testFiles',
       '9a640590-3b32-11e8-a2b2-a1d443475a3d.zip',
       './testFiles'
-    ).then((item) => expect(item).toEqual('unzipped'));
+    );
+    expect(status).toBe('unzipped');
+  });
+  test('Convert file to orginal', async () => {
+    let status = await IO.convertToOriginalFile(
+      './testFiles/hello',
+      './testfiles',
+      'hello.png',
+      'hex'
+    );
+    expect(status).toBe('Data has been written!');
+    await IO.deleteFileAsync('./testFiles/hello.png');
   });
 });
