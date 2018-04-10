@@ -1,7 +1,6 @@
 import IO from '../IO';
 import fs from 'fs';
 import path from 'path';
-import { sleep } from '../delay';
 
 describe('File System', () => {
   test('Read text format', async () => {
@@ -11,7 +10,7 @@ describe('File System', () => {
 
   test('Read an img file in hex', () => {
     let re = /[0-9A-Fa-f]{6}/g;
-    IO.readFileAsync('./testFiles/test.png', 'hex').then((item) =>
+    IO.readFileAsync('./testFiles/readTest', 'hex').then((item) =>
       expect(re.test(item)).toBe(true)
     );
   });
@@ -53,26 +52,42 @@ describe('File System', () => {
   });
 
   test('Compress the data', async () => {
-    const compressedFile = await IO.compressFiles('./testFiles/testFile', './testFiles');
-    expect(fs.existsSync(`${path.resolve('./testFiles')}/${compressedFile}`)).toBe(true);
-    await IO.deleteFileAsync(`./testFiles/${compressedFile}`);
+    let input = path.resolve('./testFiles/readTest');
+    let output = path.resolve('./testFiles');
+    const fileName = await IO.compressFiles(input, output);
+    expect(fs.existsSync(`${output}/${fileName}.zip`)).toBe(true);
+    await IO.deleteFileAsync(`${output}/${fileName}.zip`);
   });
   test('Decompress the data', async () => {
     let status = await IO.decompressFiles(
-      './testFiles',
-      '9a640590-3b32-11e8-a2b2-a1d443475a3d.zip',
+      './testFiles/fd04a130-3d05-11e8-baeb-2d62b10a780e.zip',
       './testFiles'
     );
-    expect(status).toBe('unzipped');
+    expect(status).toBe('Unzipped');
   });
   test('Convert file to orginal', async () => {
-    let status = await IO.convertToOriginalFile(
-      './testFiles/hello',
-      './testfiles',
-      'hello.png',
-      'hex'
-    );
-    expect(status).toBe('Data has been written!');
-    await IO.deleteFileAsync('./testFiles/hello.png');
+    try {
+      let status = await IO.convertToOriginalFile(
+        '48656c6c6f205468657265',
+        './testFiles',
+        'hello.txt'
+      );
+      expect(status).toBe('Data has been decrypted, go play with something else!');
+      await IO.deleteFileAsync('./testFiles/hello.txt');
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  test('Get file name inside regex', () => {
+    const testString = 'My files name is {-{-{butters.txt}-}-}';
+    expect(IO.getFileName(testString)).toEqual('butters.txt');
+  });
+  test('Get only hex data', () => {
+    const hexAndString = 'e01f010a{-{-{hello.txt}-}-}02244a';
+    expect(IO.getOnlyHexData(hexAndString)).toEqual('e01f010a02244a');
+  });
+  test('Create one upper path', () => {
+    const testPath = '/this/is/a/test/path/dtao.zip';
+    expect(IO.createOneUpperPath(testPath)).toEqual('/this/is/a/test/path/');
   });
 });
