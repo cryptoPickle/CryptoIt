@@ -20,6 +20,6 @@
     "jest": "^22.4.3"
   },
   "scripts": {
-    "test": "jest --no-cache --color"
+    "test": "jest --no-cache --color --verbose"
   }
 }
