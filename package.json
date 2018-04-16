@@ -6,7 +6,9 @@
   "dependencies": {
     "archiver": "^2.1.1",
     "colors": "^1.2.1",
+    "commander": "^2.15.1",
     "crypto-js": "^3.1.9-1",
+    "figlet": "^1.2.0",
     "path": "^0.12.7",
     "unzip": "^0.1.11",
     "uuid": "^3.2.1",
@@ -20,6 +22,11 @@
     "jest": "^22.4.3"
   },
   "scripts": {
-    "test": "jest --no-cache --color --verbose"
+    "test": "jest --no-cache --color --verbose",
+    "cryptoIt": "./bin/interface.js",
+    "postinstall": "npm run cryptoIt"
+  },
+  "bin": {
+    "cryptoIt": "./bin/interface.js"
   }
 }
