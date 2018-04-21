@@ -1,12 +1,10 @@
-#!/usr/bin/env node
+#!/usr/bin/env babel-node
 
 import colors from 'colors';
 import figlet from 'figlet';
 import program from 'commander';
 import path from 'path';
 import crypto from '../src/api/crypto';
-
-
 
 function header() {
   console.log(
@@ -22,7 +20,6 @@ function header() {
 
 header();
 
-
 program
   .command('encrypt <file>')
   .option('-O, --output-destination <output>', 'Output Destionation')
@@ -30,23 +27,16 @@ program
   .option('-E, --encrypt-file-name', 'Encrypt File Name')
   .option('-D, --destroy-orginal', 'Deletes the orginal file')
   .action(async (file, optional) => {
-    const input = path.resolve(__dirname, file);
-    const output = path.resolve(__dirname, optional.outputDestination);
-    console.log(
-      input,
-      output,
-      optional.key,
-      optional.destroyOrginal === undefined ? false : true,
-      optional.encryptFileName === undefined ? true : false,
-    );
+    const input = path.resolve(process.cwd(), file);
+    const output = path.resolve(process.cwd(), optional.outputDestination);
     const status = await crypto.encryptAndCompress(
       input,
       output,
       optional.key,
       optional.destroyOrginal === undefined ? false : true,
-      optional.encryptFileName === undefined ? false : true,
+      optional.encryptFileName === undefined ? false : true
     );
-    if(status === 'Encrypted'){
+    if (status === 'Encrypted') {
       console.log('File has been encrypted, go and play safe'.rainbow);
     }
   });
@@ -56,8 +46,8 @@ program
   .option('-O, --output-destination <output>', 'Output Destionation')
   .option('-K, --key <key>', 'Your Key')
   .action(async (file, options) => {
-    const input = path.resolve(file);
-    const output = path.resolve(options.outputDestination);
+    const input = path.resolve(process.cwd(), file);
+    const output = path.resolve(process.cwd(), options.outputDestination);
     const status = await crypto.decryptandUncompress(input, output, options.key);
     console.log(status);
   });

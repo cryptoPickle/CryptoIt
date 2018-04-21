@@ -17,23 +17,23 @@ const cryptLib = {
         .pipe(aes)
         .pipe(gzip)
         .pipe(wr)
-        .on('finish', () => resolve('Hello thereeeeee this is crypted file talking'))
+        .on('finish', () => resolve('Encrypted'))
         .on('error', reject);
     });
   },
-  decryptData(input, key, output) {
+  decryptData(input, key, output, fileName) {
     return new Promise((resolve, reject) => {
       const password = new Buffer(key);
       const aesDecrypt = crypto.createDecipher('aes-256-cbc', password);
       const rs = fs.createReadStream(input);
-      const wr = fs.createWriteStream(output);
+      const wr = fs.createWriteStream(`${output}/${fileName}`);
       const unzip = zlib.createGunzip();
       rs
         .pipe(unzip)
         .pipe(aesDecrypt)
         .pipe(wr)
         .on('finish', () => resolve('file has been decrypted'))
-        .on('error', () => reject);
+        .on('error', (e) => reject(e));
     });
   },
   cryptoFileName(filepath, key) {
