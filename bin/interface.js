@@ -3,9 +3,10 @@
 import colors from 'colors';
 import figlet from 'figlet';
 import program from 'commander';
-import encrypt from '../src/api/encrypt';
 import path from 'path';
-import decrypt from '../src/api/decrypt';
+import crypto from '../src/api/crypto';
+
+
 
 function header() {
   console.log(
@@ -21,6 +22,7 @@ function header() {
 
 header();
 
+
 program
   .command('encrypt <file>')
   .option('-O, --output-destination <output>', 'Output Destionation')
@@ -34,17 +36,19 @@ program
       input,
       output,
       optional.key,
-      false || optional.destroyOrginal,
-      false || optional.encryptFileName
+      optional.destroyOrginal === undefined ? false : true,
+      optional.encryptFileName === undefined ? true : false,
     );
-    const status = await encrypt(
+    const status = await crypto.encryptAndCompress(
       input,
       output,
       optional.key,
-      false || optional.destroyOrginal,
-      false || optional.encryptFileName
+      optional.destroyOrginal === undefined ? false : true,
+      optional.encryptFileName === undefined ? false : true,
     );
-    console.log(status);
+    if(status === 'Encrypted'){
+      console.log('File has been encrypted, go and play safe'.rainbow);
+    }
   });
 
 program
@@ -54,7 +58,7 @@ program
   .action(async (file, options) => {
     const input = path.resolve(file);
     const output = path.resolve(options.outputDestination);
-    const status = await decrypt(input, output, options.key);
+    const status = await crypto.decryptandUncompress(input, output, options.key);
     console.log(status);
   });
 
