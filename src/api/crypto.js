@@ -11,7 +11,8 @@ const crypto = {
       const re = /[0-9A-Fa-f]{6}/g;
       const fileName = path.basename(input);
       const isHex = re.test(fileName);
-      if (fs.exists(input)) {
+
+      if (fs.existsSync(input)) {
         const status = await crypt.decryptData(
           input,
           key,
