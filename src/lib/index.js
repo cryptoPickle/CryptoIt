@@ -32,7 +32,7 @@ const cryptLib = {
         .pipe(unzip)
         .pipe(aesDecrypt)
         .pipe(wr)
-        .on('finish', () => resolve('file has been decrypted'))
+        .on('finish', () => resolve('Decrypted'))
         .on('error', (e) => reject(e));
     });
   },

@@ -1,1 +1,1 @@
-export encryptFile from './api/encrypt';
+export crypto from './api';
