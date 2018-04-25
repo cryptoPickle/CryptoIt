@@ -43,7 +43,50 @@ const cryptLib = {
   decryptFileName(hexData, key) {
     return AES.decrypt(Buffer.from(hexData, 'hex').toString('ascii'), key).toString(enc.Utf8);
   },
-  deleteFileAsync: promisify(fs.unlink)
+  deleteFileAsync: promisify(fs.unlink),
+
+  //Following functions are for recursive fileNaming
+  iterateFileName(file, num = 0) {
+    const filePath = path.resolve(file);
+    const fileName = path.basename(file);
+    const isFileExists = fs.existsSync(filePath);
+    const pathExculudesFile = this.pathWitoutFile(filePath, fileName);
+    if (isFileExists) {
+      const extention = path.extname(fileName);
+      if (extention) {
+        const newFileName = `${this.createNewFileName(fileName, extention, num)}${extention}`;
+        return this.iterateFileName(`${pathExculudesFile}/${newFileName}`, (num += 1));
+      } else {
+        const newFileName = this.createNewFileName(fileName, null, num);
+        return this.iterateFileName(`${pathExculudesFile}/${newFileName}`, (num += 1));
+      }
+    } else {
+      return fileName;
+    }
+  },
+
+  /// HELPERS
+  createNewFileName(fileName, extention, num) {
+    if (extention) {
+      const baseName = fileName.split(extention)[0];
+      return `${this.baseNameWitoutCrypt(baseName)}crypted${num === 0 ? '' : num}`;
+    } else {
+      return `${this.baseNameWitoutCrypt(fileName)}crypted${num === 0 ? '' : num}`;
+    }
+  },
+
+  baseNameWitoutCrypt(file) {
+    const regex = /crypted/;
+    if (regex.test(file)) return file.split(regex)[0];
+    return file;
+  },
+
+  pathWitoutFile(filePath, fileName) {
+    return filePath
+      .split('/')
+      .filter((item) => item !== fileName)
+      .join('/');
+  }
 };
 
 export default cryptLib;
