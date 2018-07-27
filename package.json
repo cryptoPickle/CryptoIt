@@ -1,7 +1,7 @@
 {
   "name": "cryptoit",
-  "version": "0.1.0",
-  "main": "index.js",
+  "version": "0.1.9",
+  "main": "dist/bin/interface.js",
   "license": "MIT",
   "dependencies": {
     "colors": "^1.2.1",
@@ -21,10 +21,15 @@
   },
   "scripts": {
     "test": "jest --no-cache --color --verbose",
-    "cryptoIt": "./bin/interface.js",
-    "postinstall": "npm run cryptoIt"
+    "cryptoIt": "./src/bin/interface.js",
+    "postinstall": "npm run cryptoIt",
+    "build": "NODE_ENV=production babel src -s -D -d dist"
   },
   "bin": {
-    "cryptoIt": "./bin/interface.js"
-  }
+    "cryptoIt": "./src/bin/interface.js"
+  },
+  "engines": {
+    "node": ">=9.0.0"
+  },
+  "files": ["dist"]
 }

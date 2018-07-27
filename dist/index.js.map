@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.js"],"names":["encrypt","encryptAndCompress","decrypt","decryptandUncompress"],"mappings":";;;;;;;AAAA;;;;;;AAEO,IAAMA,4BAAU,cAAOC,kBAAvB;AACA,IAAMC,4BAAU,cAAOC,oBAAvB","file":"index.js","sourcesContent":["import crypto from './api';\n\nexport const encrypt = crypto.encryptAndCompress;\nexport const decrypt = crypto.decryptandUncompress;\n"]}
