@@ -93,3 +93,8 @@ For encryption
 For decryption
 
 `cryptoit decrypt testFile.png -K thisissupersecret -O .`
+
+
+#### Contact Details
+
+`halilibrahimirmak@gmail.com`
